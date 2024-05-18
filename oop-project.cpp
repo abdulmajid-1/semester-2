@@ -369,12 +369,12 @@ void Guest ::booking()
                         }
                         else
                         {
-                            cout << "You cannot stay more than 9 nights ";
+                            cout << "You cannot stay more than 9 nights \n";
                         }
                     }
                     else
                     {
-                        cout << "Invalid date ";
+                        cout << "Invalid date \n";
                     }
                 }
             }
@@ -478,8 +478,9 @@ void Guest ::datasaver(string filename)
 // {
 //     int T_bill = b;
 // }
-class Employee : public Hotel
+class Employee
 {
+public:
     string name;
     int age;
     long phone_number;
@@ -489,31 +490,87 @@ class Employee : public Hotel
 };
 class Admin : public Hotel
 {
+public:
+    Employee e[3];
+    void Add_a_employee(int index);
+    void fire_a_employee(int index);
+    void promote_a_employee(int index);
+    void complete_data_of_employee(int index);
+    void all_rooms();
 };
+void Admin ::Add_a_employee(int index)
+{
+    cout << "Enter Employee name : ";
+    cin >> e[index].name;
+    cout << "Enter Employee age : ";
+    cin >> e[index].age;
+    cout << "Enter Employee phone number : ";
+    cin >> e[index].phone_number;
+    cout << "Enter Employee designation : ";
+    cin >> e[index].designation;
+    cout << "Enter Employee payscale : ";
+    cin >> e[index].payscale;
+    cout << "Enter Employee salary : ";
+    cin >> e[index].salary;
+}
+void Admin ::promote_a_employee(int index)
+{
+    cout << e[index].designation << " was the old designation \nEnter new designation : ";
+    cin >> e[index].designation;
+    cout << e[index].salary << " was the old salary \nEnter new salary : ";
+    cin >> e[index].salary;
+}
+void Admin ::fire_a_employee(int index)
 
+{
+    e[index].name = "";
+    e[index].age = 0;
+    e[index].phone_number = 0;
+    e[index].designation = "";
+    e[index].payscale = 0;
+    e[index].salary = 0;
+
+    cout << "Employee at index " << index << " has been fired." << endl;
+}
+void Admin ::complete_data_of_employee(int index)
+{
+    cout << "The name is : " << e[index].name << endl;
+    cout << "The age is : " << e[index].age << endl;
+    cout << "The phone number is : " << e[index].phone_number << endl;
+    cout << "The designation is : " << e[index].designation << endl;
+    cout << "The payscale is : " << e[index].payscale << endl;
+    cout << "The salary is : " << e[index].salary << endl;
+}
+void Admin ::all_rooms()
+{
+    int booked_rooms[12];
+    int i = 0;
+    ifstream file("rooms.txt");
+    while (file >> booked_rooms[i])
+    {
+        // file >> booked_rooms[i];
+        cout << booked_rooms[i] << " " << endl;
+        i++;
+    }
+    file.close();
+}
 int main()
 {
-    Guest g1;
-    string Choice;
-    int temp = 0;
-    cout << "Do want to sign in or sign up (enter signin or signup) ";
-    cin >> Choice;
-    if (Choice == "signin")
-    {
-        g1.signin();
-    }
-    if (Choice == "signup")
-    {
-        Choice = "0";
-        g1.booking();
-        // cout << "Do you want to use Room service (yes or no) : ";
-        // cin >> Choice;
-        // if (Choice == "yes")
-        // {
-        //     g1.Room_service();
-        // }
+    // Guest g1;
+    // string Choice;
+    // int temp = 0;
+    // cout << "Do want to sign in or sign up (enter signin or signup) ";
+    // cin >> Choice;
+    // if (Choice == "signin")
+    // {
+    //     g1.signin();
+    // }
+    // if (Choice == "signup")
+    // {
 
-        // g1.Room_service();
-    }
+    //     g1.booking();
+    // }
+    Admin a;
+    a.all_rooms();
     return 0;
 }
