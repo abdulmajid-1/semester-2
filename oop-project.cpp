@@ -225,7 +225,7 @@ public:
     void signin();
     void booking();
     void list_of_rooms();
-    int check_in_checker(string c_date, char c_year[5], char c_month[3], char c_day[3]);
+    int check_in_checker(string c_date, string c_year, string c_month, string c_day);
     string current_date();
     void datasaver(string filename);
     //  void Bill_saver(int b);
@@ -324,9 +324,12 @@ void Guest ::booking()
         do
         {
 
-            char c_year[5];
-            char c_month[3];
-            char c_day[3];
+            // char c_year[5];
+            // char c_month[3];
+            // char c_day[3];
+            string c_year;
+            string c_month;
+            string c_day;
             int temp_bill = 0;
             int choice;
             int nights = 0;
@@ -393,53 +396,27 @@ void Guest ::booking()
         }
     }
 }
-int Guest ::check_in_checker(string c_date, char c_year[5], char c_month[3], char c_day[3])
+int Guest ::check_in_checker(string c_date, string c_year, string c_month, string c_day)
 {
 
-    char year[5];
-    char month[3];
-    char day[3];
+    string year;
 
-    int i = 0;
+    string month = "";
+    string day;
+
     cout << c_date << endl;
 
-    while (c_date[i] != '-')
-    {
-        year[i] = c_date[i];
-        i++;
-    }
-    year[i] = '\0';
-    i++;
-    int j = 0;
-    while (c_date[i] != '/')
-    {
+    year = c_date.substr(0, 4);
 
-        month[j] = c_date[i];
-        i++;
-        j++;
-    }
-    month[2] = '\0';
-    int count = 0;
+    month = c_date.substr(5, 2);
+
+    day = c_date.substr(8, 2);
+    cout << "Year is --------------------" << year << endl;
+    cout << "Month is -------------------" << month << endl;
+    cout << "date is -----------------------" << day << endl;
+    int check_integer_date = stoi(day);
     int integer_date = stoi(c_day);
-    // day[0] = c_date[8];
-    // day[1] = c_date[9];
-    // int int_check_date = stoi(day);
-
-    for (int j = 0; j < 4; j++)
-    {
-        if (c_year[j] == year[j] && 0 < integer_date && integer_date <= 31)
-        {
-            count++;
-        }
-    }
-    for (int j = 0; j < 2; j++)
-    {
-        if (c_month[j] == month[j])
-        {
-            count++;
-        }
-    }
-    if (count == 6)
+    if (year == c_year && month == c_month && check_integer_date < integer_date)
     {
         return 1;
     }
@@ -496,8 +473,61 @@ public:
     void fire_a_employee(int index);
     void promote_a_employee(int index);
     void complete_data_of_employee(int index);
+    void All_employees();
     void all_rooms();
+    void control();
 };
+void Admin ::control()
+{
+    string choice;
+    cout << "Do you want to Add an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        All_employees();
+        int index = 0;
+        cout << "Enter the index you want to enter employee in : ";
+        cin >> index;
+        Add_a_employee(index);
+        complete_data_of_employee(index);
+    }
+    cout << "Do you want to fire an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        int index = 0;
+        All_employees();
+        cout << "Enter the index of the employee you want to fire : ";
+        cin >> index;
+        fire_a_employee(index);
+        complete_data_of_employee(index);
+    }
+    cout << "Do you want to promote an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        int index = 0;
+        All_employees();
+        cout << "Enter the index of the employee you want to promote : ";
+        cin >> index;
+        promote_a_employee(index);
+        complete_data_of_employee(index);
+    }
+}
+void Admin ::All_employees()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "   This information is at index 0   \n\n";
+        cout << "Employee " << i + 1 << " Information is : " << endl;
+        cout << "Name is : " << e[i].name << endl;
+        cout << "Age is : " << e[i].age << endl;
+        cout << "Phone number is : " << e[i].phone_number << endl;
+        cout << "Designation is : " << e[i].designation << endl;
+        cout << "Payscale is : " << e[i].payscale << endl;
+        cout << "Salary is : " << e[i].salary << endl;
+    }
+}
 void Admin ::Add_a_employee(int index)
 {
     cout << "Enter Employee name : ";
@@ -512,6 +542,13 @@ void Admin ::Add_a_employee(int index)
     cin >> e[index].payscale;
     cout << "Enter Employee salary : ";
     cin >> e[index].salary;
+    ofstream file("Employee_data.txt", ios ::app);
+    file << e[index].name << endl
+         << e[index].age << endl
+         << e[index].designation << endl;
+    file << e[index].phone_number << endl
+         << e[index].payscale << endl
+         << e[index].salary << endl;
 }
 void Admin ::promote_a_employee(int index)
 {
@@ -556,7 +593,7 @@ void Admin ::all_rooms()
 }
 int main()
 {
-    // Guest g1;
+    Guest g1;
     // string Choice;
     // int temp = 0;
     // cout << "Do want to sign in or sign up (enter signin or signup) ";
@@ -570,7 +607,8 @@ int main()
 
     //     g1.booking();
     // }
-    Admin a;
-    a.all_rooms();
+    // Admin a;
+    // a.control();
+    g1.booking();
     return 0;
 }
