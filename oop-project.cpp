@@ -228,6 +228,7 @@ public:
     int check_in_checker(string c_date, string c_year, string c_month, string c_day);
     string current_date();
     void datasaver(string filename);
+    void datasaver(string filename, int roomnum);
     //  void Bill_saver(int b);
 };
 void Guest ::Register()
@@ -314,6 +315,7 @@ void Guest ::booking()
     string choice;
     Register();
     int customer_Room = 0;
+    int temp_room = 0;
     customer_Room = Is_room_availible();
     if (customer_Room == 20)
     {
@@ -324,15 +326,13 @@ void Guest ::booking()
         do
         {
 
-            // char c_year[5];
-            // char c_month[3];
-            // char c_day[3];
             string c_year;
             string c_month;
             string c_day;
             int temp_bill = 0;
             int choice;
             int nights = 0;
+
             list_of_rooms();
             // cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "What kind of room you want : ";
@@ -363,12 +363,13 @@ void Guest ::booking()
                             cout << "\n\nCongrats your room is booked sucessfully !\n";
                             cout << "Your bill will be : " << temp_bill << endl;
                             cout << "you will check in at " << c_day << "/" << c_month << "/" << c_year << endl;
-
                             cout << "your room number will be " << room_number[customer_Room] << endl;
-                            ofstream room_file("rooms.txt", ios ::app);
-                            room_file << room_number[customer_Room] << endl;
-                            room_file.close();
+                            datasaver("rooms.txt", room_number[customer_Room]);
+                            // ofstream room_file("rooms.txt", ios ::app);
+                            // room_file << room_number[customer_Room] << endl;
+                            // room_file.close();
                             customer_Room++;
+                            temp_room = 1;
                         }
                         else
                         {
@@ -388,11 +389,14 @@ void Guest ::booking()
             cout << "Do you want another room (yes or no) ";
             cin >> other;
         } while (other == "yes");
-        cout << "Do you want to use Room service (yes or no) : ";
-        cin >> choice;
-        if (choice == "yes")
+        if (temp_room > 0)
         {
-            Room_service();
+            cout << "Do you want to use Room service (yes or no) : ";
+            cin >> choice;
+            if (choice == "yes")
+            {
+                Room_service();
+            }
         }
     }
 }
@@ -416,7 +420,7 @@ int Guest ::check_in_checker(string c_date, string c_year, string c_month, strin
     cout << "date is -----------------------" << day << endl;
     int check_integer_date = stoi(day);
     int integer_date = stoi(c_day);
-    if (year == c_year && month == c_month && check_integer_date < integer_date)
+    if (year == c_year && month == c_month && check_integer_date < integer_date && integer_date <= 31)
     {
         return 1;
     }
@@ -451,6 +455,12 @@ void Guest ::datasaver(string filename)
          << password << endl;
     file.close();
 }
+void Guest ::datasaver(string filename, int roomnum)
+{
+    ofstream file(filename, ios::app);
+    file << roomnum << endl;
+    file.close();
+}
 // void Bill_saver(int b)
 // {
 //     int T_bill = b;
@@ -469,7 +479,8 @@ class Admin : public Hotel
 {
 public:
     Employee e[3];
-    void Add_a_employee(int index);
+    Employee *p;
+    void Add_a_employee();
     void fire_a_employee(int index);
     void promote_a_employee(int index);
     void complete_data_of_employee(int index);
@@ -485,11 +496,9 @@ void Admin ::control()
     if (choice == "yes")
     {
         All_employees();
-        int index = 0;
-        cout << "Enter the index you want to enter employee in : ";
-        cin >> index;
-        Add_a_employee(index);
-        complete_data_of_employee(index);
+
+        Add_a_employee();
+        // complete_data_of_employee(index);
     }
     cout << "Do you want to fire an employee (yes or no) ";
     cin >> choice;
@@ -528,27 +537,44 @@ void Admin ::All_employees()
         cout << "Salary is : " << e[i].salary << endl;
     }
 }
-void Admin ::Add_a_employee(int index)
+void Admin ::Add_a_employee()
 {
-    cout << "Enter Employee name : ";
-    cin >> e[index].name;
-    cout << "Enter Employee age : ";
-    cin >> e[index].age;
-    cout << "Enter Employee phone number : ";
-    cin >> e[index].phone_number;
-    cout << "Enter Employee designation : ";
-    cin >> e[index].designation;
-    cout << "Enter Employee payscale : ";
-    cin >> e[index].payscale;
-    cout << "Enter Employee salary : ";
-    cin >> e[index].salary;
-    ofstream file("Employee_data.txt", ios ::app);
-    file << e[index].name << endl
-         << e[index].age << endl
-         << e[index].designation << endl;
-    file << e[index].phone_number << endl
-         << e[index].payscale << endl
-         << e[index].salary << endl;
+    int add = 0;
+    cout << "Enter how many employees you want to Add : ";
+    cin >> add;
+    if (add < 11)
+    {
+
+        p = new Employee[add];
+        for (int i = 0; i < add; i++)
+        {
+            cout << "Enter the data of Employee number " << i + 1 << endl;
+            cout << "Enter Employee name : ";
+            cin >> p[i].name;
+            cout << "Enter Employee age : ";
+            cin >> p[i].age;
+            cout << "Enter Employee phone number : ";
+            cin >> p[i].phone_number;
+            cout << "Enter Employee designation : ";
+            cin >> p[i].designation;
+            cout << "Enter Employee payscale : ";
+            cin >> p[i].payscale;
+            cout << "Enter Employee salary : ";
+            cin >> p[i].salary;
+            ofstream file("Employee_data.txt", ios ::app);
+            file << p[i].name << endl
+                 << p[i].age << endl
+                 << p[i].designation << endl;
+            file << p[i].phone_number << endl
+                 << p[i].payscale << endl
+                 << p[i].salary << endl;
+            file.close();
+        }
+    }
+    else
+    {
+        cout << "You cannot add more than 10 Employees" << endl;
+    }
 }
 void Admin ::promote_a_employee(int index)
 {
