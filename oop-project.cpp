@@ -78,7 +78,7 @@ class Hotel
 
 public:
     Hotel();
-    void Greetings();
+    void virtual Greetings();
 };
 Hotel ::Hotel()
 {
@@ -225,9 +225,10 @@ public:
     void signin();
     void booking();
     void list_of_rooms();
-    int check_in_checker(string c_date, char c_year[5], char c_month[3], char c_day[3]);
+    int check_in_checker(string c_date, string c_year, string c_month, string c_day);
     string current_date();
     void datasaver(string filename);
+    void datasaver(string filename, int roomnum);
     //  void Bill_saver(int b);
 };
 void Guest ::Register()
@@ -314,6 +315,7 @@ void Guest ::booking()
     string choice;
     Register();
     int customer_Room = 0;
+    int temp_room = 0;
     customer_Room = Is_room_availible();
     if (customer_Room == 20)
     {
@@ -324,12 +326,13 @@ void Guest ::booking()
         do
         {
 
-            char c_year[5];
-            char c_month[3];
-            char c_day[3];
+            string c_year;
+            string c_month;
+            string c_day;
             int temp_bill = 0;
             int choice;
             int nights = 0;
+
             list_of_rooms();
             // cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "What kind of room you want : ";
@@ -360,12 +363,13 @@ void Guest ::booking()
                             cout << "\n\nCongrats your room is booked sucessfully !\n";
                             cout << "Your bill will be : " << temp_bill << endl;
                             cout << "you will check in at " << c_day << "/" << c_month << "/" << c_year << endl;
-
                             cout << "your room number will be " << room_number[customer_Room] << endl;
-                            ofstream room_file("rooms.txt", ios ::app);
-                            room_file << room_number[customer_Room] << endl;
-                            room_file.close();
+                            datasaver("rooms.txt", room_number[customer_Room]);
+                            // ofstream room_file("rooms.txt", ios ::app);
+                            // room_file << room_number[customer_Room] << endl;
+                            // room_file.close();
                             customer_Room++;
+                            temp_room = 1;
                         }
                         else
                         {
@@ -385,61 +389,38 @@ void Guest ::booking()
             cout << "Do you want another room (yes or no) ";
             cin >> other;
         } while (other == "yes");
-        cout << "Do you want to use Room service (yes or no) : ";
-        cin >> choice;
-        if (choice == "yes")
+        if (temp_room > 0)
         {
-            Room_service();
+            cout << "Do you want to use Room service (yes or no) : ";
+            cin >> choice;
+            if (choice == "yes")
+            {
+                Room_service();
+            }
         }
     }
 }
-int Guest ::check_in_checker(string c_date, char c_year[5], char c_month[3], char c_day[3])
+int Guest ::check_in_checker(string c_date, string c_year, string c_month, string c_day)
 {
 
-    char year[5];
-    char month[3];
-    char day[3];
+    string year;
 
-    int i = 0;
+    string month = "";
+    string day;
+
     cout << c_date << endl;
 
-    while (c_date[i] != '-')
-    {
-        year[i] = c_date[i];
-        i++;
-    }
-    year[i] = '\0';
-    i++;
-    int j = 0;
-    while (c_date[i] != '/')
-    {
+    year = c_date.substr(0, 4);
 
-        month[j] = c_date[i];
-        i++;
-        j++;
-    }
-    month[2] = '\0';
-    int count = 0;
+    month = c_date.substr(5, 2);
+
+    day = c_date.substr(8, 2);
+    cout << "Year is --------------------" << year << endl;
+    cout << "Month is -------------------" << month << endl;
+    cout << "date is -----------------------" << day << endl;
+    int check_integer_date = stoi(day);
     int integer_date = stoi(c_day);
-    // day[0] = c_date[8];
-    // day[1] = c_date[9];
-    // int int_check_date = stoi(day);
-
-    for (int j = 0; j < 4; j++)
-    {
-        if (c_year[j] == year[j] && 0 < integer_date && integer_date <= 31)
-        {
-            count++;
-        }
-    }
-    for (int j = 0; j < 2; j++)
-    {
-        if (c_month[j] == month[j])
-        {
-            count++;
-        }
-    }
-    if (count == 6)
+    if (year == c_year && month == c_month && check_integer_date < integer_date && integer_date <= 31)
     {
         return 1;
     }
@@ -474,6 +455,12 @@ void Guest ::datasaver(string filename)
          << password << endl;
     file.close();
 }
+void Guest ::datasaver(string filename, int roomnum)
+{
+    ofstream file(filename, ios::app);
+    file << roomnum << endl;
+    file.close();
+}
 // void Bill_saver(int b)
 // {
 //     int T_bill = b;
@@ -482,64 +469,325 @@ class Employee
 {
 public:
     string name;
-    int age;
-    long phone_number;
+    string age;
+    string phone_number;
     string designation;
-    int payscale;
-    int salary;
+    string payscale;
+    string salary;
 };
 class Admin : public Hotel
 {
+
+    int add = 0;
+    Employee *p;
+
 public:
-    Employee e[3];
-    void Add_a_employee(int index);
+    // Employee e[3];
+
+    void Add_a_employee(int file_members);
     void fire_a_employee(int index);
     void promote_a_employee(int index);
     void complete_data_of_employee(int index);
+    int All_the_file_employees();
+    void All_employees();
     void all_rooms();
+    void control();
+    ~Admin() { delete[] p; }
 };
-void Admin ::Add_a_employee(int index)
+void Admin ::control()
 {
-    cout << "Enter Employee name : ";
-    cin >> e[index].name;
-    cout << "Enter Employee age : ";
-    cin >> e[index].age;
-    cout << "Enter Employee phone number : ";
-    cin >> e[index].phone_number;
-    cout << "Enter Employee designation : ";
-    cin >> e[index].designation;
-    cout << "Enter Employee payscale : ";
-    cin >> e[index].payscale;
-    cout << "Enter Employee salary : ";
-    cin >> e[index].salary;
+    string choice;
+    cout << "Do you want to Add an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        Add_a_employee(All_the_file_employees());
+
+        // complete_data_of_employee(index);
+    }
+    cout << "Do you want to promote an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        int index = 0;
+        All_employees();
+        cout << "\nEnter the index of the employee you want to promote : ";
+        cin >> index;
+        promote_a_employee(index);
+        complete_data_of_employee(index);
+    }
+    cout << "Do you want to fire an employee (yes or no) ";
+    cin >> choice;
+    if (choice == "yes")
+    {
+        int index = 0;
+        All_employees();
+        cout << "\nEnter the index of the employee you want to fire : ";
+        cin >> index;
+        fire_a_employee(index);
+        // complete_data_of_employee(index);
+    }
+}
+void Admin ::All_employees()
+{
+    // Employee *temp;
+    int file_member_counter = 0;
+    string line;
+    ifstream file("Employee_data.txt");
+
+    // First pass to count the number of employees
+    while (getline(file, line))
+    {
+        if (line == "...")
+        {
+            file_member_counter++;
+        }
+    }
+    file.clear();            // Clear the EOF flag
+    file.seekg(0, ios::beg); // Move back to the beginning of the file
+
+    // Allocate memory for employees
+    p = new Employee[file_member_counter];
+
+    // Second pass to read employee data
+    int i = 0;
+    int count = 0;
+
+    while (getline(file, line))
+    {
+        if (line == "...")
+        {
+            i++;
+            count = 0;
+            continue;
+        }
+        switch (count)
+        {
+        case 0:
+            p[i].name = line;
+            break;
+        case 1:
+            p[i].age = line;
+            break;
+        case 2:
+            p[i].phone_number = line;
+            break;
+        case 3:
+            p[i].designation = line;
+            break;
+        case 4:
+            p[i].payscale = line;
+            break;
+        case 5:
+            p[i].salary = line;
+            break;
+        }
+        count++;
+    }
+    file.close();
+    for (int j = 0; j < file_member_counter; j++)
+    {
+        cout << "\n\nThis information is at index " << j << " is : \n\n";
+        cout << "Name is : " << p[j].name << endl;
+        cout << "Age is : " << p[j].age << endl;
+        cout << "Phone number is : " << p[j].phone_number << endl;
+        cout << "Designation is : " << p[j].designation << endl;
+        cout << "Payscale is : " << p[j].payscale << endl;
+        cout << "Salary is : " << p[j].salary << endl;
+    }
+}
+int Admin ::All_the_file_employees()
+{
+    int file_member_counter = 0;
+    string line;
+    ifstream file("Employee_data.txt");
+
+    // First pass to count the number of employees
+    while (getline(file, line))
+    {
+        if (line == "...")
+        {
+            file_member_counter++;
+        }
+    }
+    file.clear();            // Clear the EOF flag
+    file.seekg(0, ios::beg); // Move back to the beginning of the file
+
+    // Allocate memory for employees
+    p = new Employee[file_member_counter];
+
+    // Second pass to read employee data
+    int i = 0;
+    int count = 0;
+
+    while (getline(file, line))
+    {
+        if (line == "...")
+        {
+            i++;
+            count = 0;
+            continue;
+        }
+        switch (count)
+        {
+        case 0:
+            p[i].name = line;
+            break;
+        case 1:
+            p[i].age = line;
+            break;
+        case 2:
+            p[i].phone_number = line;
+            break;
+        case 3:
+            p[i].designation = line;
+            break;
+        case 4:
+            p[i].payscale = line;
+            break;
+        case 5:
+            p[i].salary = line;
+            break;
+        }
+        count++;
+    }
+    file.close();
+    return file_member_counter;
+}
+
+void Admin ::Add_a_employee(int file_members)
+{
+
+    cout << "Enter how many employees you want to Add : ";
+    cin >> add;
+    if (add < 11)
+    {
+        p = new Employee[add + file_members];
+        for (int i = 0; i < add; i++)
+        {
+            cout << "Enter the data of Employee number " << i + 1 << endl;
+            cout << "Enter Employee name : ";
+            cin >> p[i].name;
+            cout << "Enter Employee age : ";
+            cin >> p[i].age;
+            cout << "Enter Employee phone number : ";
+            cin >> p[i].phone_number;
+            cout << "Enter Employee designation : ";
+            cin >> p[i].designation;
+            cout << "Enter Employee payscale : ";
+            cin >> p[i].payscale;
+            cout << "Enter Employee salary : ";
+            cin >> p[i].salary;
+            ofstream file("Employee_data.txt", ios ::app);
+            file << p[i].name << endl
+                 << p[i].age << endl
+                 << p[i].phone_number << endl;
+            file << p[i].designation << endl
+                 << p[i].payscale << endl
+                 << p[i].salary << endl
+                 << "..." << endl;
+            file.close();
+        }
+    }
+    else
+    {
+        cout << "You cannot add more than 10 Employees" << endl;
+    }
 }
 void Admin ::promote_a_employee(int index)
 {
-    cout << e[index].designation << " was the old designation \nEnter new designation : ";
-    cin >> e[index].designation;
-    cout << e[index].salary << " was the old salary \nEnter new salary : ";
-    cin >> e[index].salary;
+
+    cout << p[index].designation << " was the old designation \nEnter new designation: ";
+    cin >> p[index].designation;
+
+    cout << endl
+         << p[index].payscale << " was the old payscale \nEnter the new payscale: ";
+    cin >> p[index].payscale;
+
+    cout << endl
+         << p[index].salary << " was the old salary \nEnter new salary: ";
+    cin >> p[index].salary;
+    string c_name;
+    ofstream temp_file("temp.txt");
+    ifstream file("Employee_data.txt");
+
+    while (getline(file, c_name))
+    {
+        if (c_name == p[index].name)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                getline(file, c_name);
+            }
+            temp_file << p[index].name << endl;
+            temp_file << p[index].age << endl;
+            temp_file << p[index].phone_number << endl;
+            temp_file << p[index].designation << endl;
+            temp_file << p[index].payscale << endl;
+            temp_file << p[index].salary << endl
+                      << "..." << endl;
+        }
+        else
+        {
+            temp_file << c_name << endl;
+        }
+    }
+
+    file.close();
+    temp_file.close();
+
+    remove("Employee_data.txt");
+    rename("temp.txt", "Employee_data.txt");
+
+    cout << "\n\nEmployee at index " << index << " has been promoted." << endl;
 }
+
 void Admin ::fire_a_employee(int index)
 
 {
-    e[index].name = "";
-    e[index].age = 0;
-    e[index].phone_number = 0;
-    e[index].designation = "";
-    e[index].payscale = 0;
-    e[index].salary = 0;
 
-    cout << "Employee at index " << index << " has been fired." << endl;
+    string c_name;
+    int temp_count = 0;
+    ofstream temp_file("temp.txt");
+    ifstream file("Employee_data.txt");
+
+    while (getline(file, c_name))
+    {
+        if (c_name == p[index].name)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                getline(file, c_name);
+            }
+        }
+        else
+        {
+            temp_file << c_name << endl;
+        }
+    }
+
+    file.close();
+    temp_file.close();
+    cout << p[index].name << " has been fired " << endl;
+
+    p[index].name = "";
+    p[index].age = "";
+    p[index].phone_number = "";
+    p[index].designation = "";
+    p[index].payscale = "";
+    p[index].salary = "";
+
+    remove("Employee_data.txt");
+    rename("temp.txt", "Employee_data.txt");
 }
 void Admin ::complete_data_of_employee(int index)
 {
-    cout << "The name is : " << e[index].name << endl;
-    cout << "The age is : " << e[index].age << endl;
-    cout << "The phone number is : " << e[index].phone_number << endl;
-    cout << "The designation is : " << e[index].designation << endl;
-    cout << "The payscale is : " << e[index].payscale << endl;
-    cout << "The salary is : " << e[index].salary << endl;
+    cout << "The name is : " << p[index].name << endl;
+    cout << "The age is : " << p[index].age << endl;
+    cout << "The phone number is : " << p[index].phone_number << endl;
+    cout << "The designation is : " << p[index].designation << endl;
+    cout << "The payscale is : " << p[index].payscale << endl;
+    cout << "The salary is : " << p[index].salary << endl;
 }
 void Admin ::all_rooms()
 {
@@ -571,6 +819,9 @@ int main()
     //     g1.booking();
     // }
     Admin a;
-    a.all_rooms();
+    a.control();
+    // a.All_the_file_employees();
+
+    //  g1.booking();
     return 0;
 }
