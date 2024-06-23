@@ -82,7 +82,6 @@ public:
 };
 Hotel ::Hotel()
 {
-    Greetings();
     // room_capacity = 100;
     hotel_address = "UMT roads, near HBL";
 }
@@ -98,7 +97,7 @@ class Room : public Hotel
     int total_rooms;
 
 protected:
-    int room_price[3];
+    int room_price[3] = {1000, 2000, 3000};
     int room_number[10];
 
 public:
@@ -112,10 +111,6 @@ Room ::Room()
     for (int i = 0; i < total_rooms; i++)
     {
         room_number[i] = i + 100;
-    }
-    for (int i = 0; i < 3; i++)
-    {
-        room_price[i] = (i + 10) * 100;
     }
 }
 int Room ::Is_room_availible()
@@ -415,9 +410,9 @@ int Guest ::check_in_checker(string c_date, string c_year, string c_month, strin
     month = c_date.substr(5, 2);
 
     day = c_date.substr(8, 2);
-    cout << "Year is --------------------" << year << endl;
-    cout << "Month is -------------------" << month << endl;
-    cout << "date is -----------------------" << day << endl;
+    // cout << "Year is --------------------" << year << endl;
+    // cout << "Month is -------------------" << month << endl;
+    // cout << "date is -----------------------" << day << endl;
     int check_integer_date = stoi(day);
     int integer_date = stoi(c_day);
     if (year == c_year && month == c_month && check_integer_date < integer_date && integer_date <= 31)
@@ -496,37 +491,55 @@ public:
 };
 void Admin ::control()
 {
+    string exit;
     string choice;
-    cout << "Do you want to Add an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
+    do
     {
-        Add_a_employee(All_the_file_employees());
+        cout << "Do you want to Add an employee (yes or no) ";
+        getline(cin, choice);
+        if (choice == "yes")
+        {
+            Add_a_employee(All_the_file_employees());
 
-        // complete_data_of_employee(index);
-    }
-    cout << "Do you want to promote an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
-    {
-        int index = 0;
-        All_employees();
-        cout << "\nEnter the index of the employee you want to promote : ";
-        cin >> index;
-        promote_a_employee(index);
-        complete_data_of_employee(index);
-    }
-    cout << "Do you want to fire an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
-    {
-        int index = 0;
-        All_employees();
-        cout << "\nEnter the index of the employee you want to fire : ";
-        cin >> index;
-        fire_a_employee(index);
-        // complete_data_of_employee(index);
-    }
+            // complete_data_of_employee(index);
+        }
+        cout << "Do you want to promote an employee (yes or no) ";
+        getline(cin, choice);
+
+        if (choice == "yes")
+        {
+            int index = 0;
+            All_employees();
+            cout << "\nEnter the index of the employee you want to promote : ";
+            cin >> index;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
+            promote_a_employee(index);
+            complete_data_of_employee(index);
+        }
+        cout << "Do you want to fire an employee (yes or no) ";
+        getline(cin, choice);
+
+        if (choice == "yes")
+        {
+            int index = 0;
+            All_employees();
+            cout << "\nEnter the index of the employee you want to fire : ";
+            cin >> index;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
+            fire_a_employee(index);
+            // complete_data_of_employee(index);
+        }
+        cout << "DO you want to check all the booked rooms : ";
+        getline(cin, choice);
+        if (choice == "yes")
+        {
+            all_rooms();
+        }
+        cout << "Do you want to exit (yes or no) : ";
+        getline(cin, exit);
+    } while (exit != "yes");
 }
 void Admin ::All_employees()
 {
@@ -660,6 +673,8 @@ void Admin ::Add_a_employee(int file_members)
 
     cout << "Enter how many employees you want to Add : ";
     cin >> add;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
     if (add < 11)
     {
         p = new Employee[add + file_members];
@@ -667,17 +682,17 @@ void Admin ::Add_a_employee(int file_members)
         {
             cout << "Enter the data of Employee number " << i + 1 << endl;
             cout << "Enter Employee name : ";
-            cin >> p[i].name;
+            getline(cin, p[i].name);
             cout << "Enter Employee age : ";
-            cin >> p[i].age;
+            getline(cin, p[i].age);
             cout << "Enter Employee phone number : ";
-            cin >> p[i].phone_number;
+            getline(cin, p[i].phone_number);
             cout << "Enter Employee designation : ";
-            cin >> p[i].designation;
+            getline(cin, p[i].designation);
             cout << "Enter Employee payscale : ";
-            cin >> p[i].payscale;
+            getline(cin, p[i].payscale);
             cout << "Enter Employee salary : ";
-            cin >> p[i].salary;
+            getline(cin, p[i].salary);
             ofstream file("Employee_data.txt", ios ::app);
             file << p[i].name << endl
                  << p[i].age << endl
@@ -698,15 +713,15 @@ void Admin ::promote_a_employee(int index)
 {
 
     cout << p[index].designation << " was the old designation \nEnter new designation: ";
-    cin >> p[index].designation;
+    getline(cin, p[index].designation);
 
     cout << endl
          << p[index].payscale << " was the old payscale \nEnter the new payscale: ";
-    cin >> p[index].payscale;
+    getline(cin, p[index].payscale);
 
     cout << endl
          << p[index].salary << " was the old salary \nEnter new salary: ";
-    cin >> p[index].salary;
+    getline(cin, p[index].salary);
     string c_name;
     ofstream temp_file("temp.txt");
     ifstream file("Employee_data.txt");
@@ -715,7 +730,7 @@ void Admin ::promote_a_employee(int index)
     {
         if (c_name == p[index].name)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 getline(file, c_name);
             }
@@ -804,24 +819,66 @@ void Admin ::all_rooms()
 }
 int main()
 {
-    // Guest g1;
-    // string Choice;
-    // int temp = 0;
-    // cout << "Do want to sign in or sign up (enter signin or signup) ";
-    // cin >> Choice;
-    // if (Choice == "signin")
-    // {
-    //     g1.signin();
-    // }
-    // if (Choice == "signup")
-    // {
-
-    //     g1.booking();
-    // }
+    Guest g1;
+    g1.Greetings();
     Admin a;
-    a.control();
-    // a.All_the_file_employees();
+    string Choice;
+    cout << "Are you a user or admin (user or admin) : ";
+    getline(cin, Choice);
+    if (Choice == "user")
+    {
+        cout << "Do want to sign in or sign up (enter signin or signup) ";
+        getline(cin, Choice);
+        if (Choice == "signin")
+        {
+            g1.signin();
 
-    //  g1.booking();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+        }
+        else if (Choice == "signup")
+        {
+
+            g1.booking();
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+        }
+        else
+        {
+            cout << "\nError! \n\n";
+        }
+    }
+    else if (Choice == "admin")
+    {
+
+        string pass = "";
+        int tries = 3;
+        while (tries > 0)
+        {
+            cout << "Enter the password for admin : ";
+            getline(cin, pass);
+            if (pass == "majid")
+            {
+                a.control();
+                break;
+            }
+            else
+            {
+                tries--;
+                cout << "Wrong password! " << endl;
+                if (tries > 0)
+                {
+                    cout << "You have " << tries << " more tries." << endl;
+                }
+                else
+                {
+                    cout << "No more tries left." << endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        cout << "Wrong choice !!!" << endl;
+    }
     return 0;
 }
