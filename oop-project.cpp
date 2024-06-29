@@ -1,69 +1,3 @@
-/*
- we want to make a hotel management system
- we will use Absraction , inheritance , polymorphism , encapsulation
- we will take user registration
- we will take user data and store it in file
- we will make a login setup
- we will check room availibility
- we will check login date and time to see weather the room is availible or not
- we will give an administrator login
- we will give staff login and attendence
- we will register staff
- we will setup a paygrade and pay of the staff
- we will make a restruant management system
- Creating a hotel management system using object-oriented programming (OOP) in C++ is a great project idea.
-  Here are some key components and features you can include
-     Classes:
-         Hotel: Representing the hotel itself, containing information
-         such as name, address, contact details, etc.
-         Room: Representing individual rooms in the hotel, including
-         attributes like room number, type (single, double, suite), availability, price, etc.
-         Guest: Representing guests staying at the hotel, with attributes
-         such as name, contact information, check-in/check-out dates, room assigned, etc.
-         Employee: Representing hotel staff, with attributes such as name, role, contact information, etc
-     Functionality:
-         Room Management: Functions to add, remove, and update room
-         details (e.g., availability, price).
-         Reservation Management: Allowing guests to make reservations,
-         check room availability, and manage bookings.
-         Check-in/Check-out: Handling guest check-in and check-out processes,
-         updating room availability accordingly.
-         Billing: Calculating and managing guest bills, including room charges,
-         additional services, taxes, etc.
-         Employee Management: Functions to add, remove, and update employee details,
-         as well as manage their roles and permissions.
-         Reporting: Generating various reports such as occupancy rates, revenue, guest demographics, etc
-     Data Management:
-         Use of data structures like arrays, linked lists, or vectors to
-          store and manage information about rooms, guests, and employees.
-         Consider using file handling to save and retrieve data to/from external files for persistence
-     User Interface:
-         Design a user-friendly interface for both hotel staff (management) and guests
-         (booking/reservation system).
-         For a console-based application, use menus and prompts for user interaction.
-         For a more advanced project, consider implementing a graphical user interface (GUI) using libraries like Qt or SFML
-     Error Handling:
-         Implement robust error handling mechanisms to deal with invalid user inputs,
-          database errors, etc.
-         Use exceptions to handle exceptional cases gracefully
-     Security:
-         Implement authentication mechanisms for hotel staff to access management functionalities.
-         Ensure data privacy and integrity by applying appropriate access controls
-     Scalability and Extensibility:
-         Design the system in a modular way so that it can be easily extended
-         or modified to accommodate new features or changes in requirements.
-         Consider using design patterns like Factory, Observer, or Strategy
-          to manage complexity and promote flexibility.
-
-     Testing:
-         Write test cases to ensure that the system functions correctly under
-          various scenarios, including edge cases and boundary conditions.
-
-By incorporating these elements into your hotel management system,
-you can create a comprehensive and efficient solution that effectively manages hotel operations.
-
-*/
-
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -82,8 +16,6 @@ public:
 };
 Hotel ::Hotel()
 {
-    Greetings();
-    // room_capacity = 100;
     hotel_address = "UMT roads, near HBL";
 }
 void Hotel ::Greetings()
@@ -98,7 +30,7 @@ class Room : public Hotel
     int total_rooms;
 
 protected:
-    int room_price[3];
+    int room_price[3] = {1000, 2000, 3000};
     int room_number[10];
 
 public:
@@ -112,10 +44,6 @@ Room ::Room()
     for (int i = 0; i < total_rooms; i++)
     {
         room_number[i] = i + 100;
-    }
-    for (int i = 0; i < 3; i++)
-    {
-        room_price[i] = (i + 10) * 100;
     }
 }
 int Room ::Is_room_availible()
@@ -229,7 +157,6 @@ public:
     string current_date();
     void datasaver(string filename);
     void datasaver(string filename, int roomnum);
-    //  void Bill_saver(int b);
 };
 void Guest ::Register()
 {
@@ -243,16 +170,7 @@ void Guest ::Register()
     cout << "Make a password that will be use to sign in (use a strong password) : ";
     getline(cin, password);
 
-    // work on check in date
-    //  booking();
     datasaver("usercomplete_data.txt");
-    // ofstream file("userscomplete_data.txt", ios::app);
-    // file << name << endl
-    //      << age << endl
-    //      << email << endl
-    //      << password << endl
-    //      << check_in_date << endl;
-    // file.close();
     ofstream signin_file("users_signin_data.txt", ios ::app);
     signin_file << email << endl
                 << password << endl;
@@ -271,7 +189,6 @@ void Guest ::signin()
         cout << "Enter your password : ";
         cin >> password;
         ifstream signin_file("users_signin_data.txt");
-        // do work here
 
         while (!signin_file.eof())
         {
@@ -292,8 +209,7 @@ void Guest ::signin()
                         {
                             Room_service();
                         }
-                        // return 1;
-                        //  cout << "\n\n\n\n\n";
+
                         Try = 1;
                         i = 3;
                     }
@@ -334,7 +250,6 @@ void Guest ::booking()
             int nights = 0;
 
             list_of_rooms();
-            // cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "What kind of room you want : ";
             cin >> choice;
             if (choice >= 0 && choice < 3)
@@ -353,7 +268,6 @@ void Guest ::booking()
 
                     if (temp_checker == 1)
                     {
-                        // do your work here
 
                         cout << "How many nights do you want to stay ! ";
                         cin >> nights;
@@ -365,9 +279,6 @@ void Guest ::booking()
                             cout << "you will check in at " << c_day << "/" << c_month << "/" << c_year << endl;
                             cout << "your room number will be " << room_number[customer_Room] << endl;
                             datasaver("rooms.txt", room_number[customer_Room]);
-                            // ofstream room_file("rooms.txt", ios ::app);
-                            // room_file << room_number[customer_Room] << endl;
-                            // room_file.close();
                             customer_Room++;
                             temp_room = 1;
                         }
@@ -415,9 +326,7 @@ int Guest ::check_in_checker(string c_date, string c_year, string c_month, strin
     month = c_date.substr(5, 2);
 
     day = c_date.substr(8, 2);
-    cout << "Year is --------------------" << year << endl;
-    cout << "Month is -------------------" << month << endl;
-    cout << "date is -----------------------" << day << endl;
+
     int check_integer_date = stoi(day);
     int integer_date = stoi(c_day);
     if (year == c_year && month == c_month && check_integer_date < integer_date && integer_date <= 31)
@@ -443,7 +352,7 @@ string Guest ::current_date()
     strftime(dateString, sizeof(dateString), "%Y-%m/%d", localtime(&currentTime));
 
     // Output the current date
-    cout << "Current date: " << dateString << endl;
+    // cout << "Current date: " << dateString << endl;
     return dateString;
 }
 void Guest ::datasaver(string filename)
@@ -461,10 +370,7 @@ void Guest ::datasaver(string filename, int roomnum)
     file << roomnum << endl;
     file.close();
 }
-// void Bill_saver(int b)
-// {
-//     int T_bill = b;
-// }
+
 class Employee
 {
 public:
@@ -482,8 +388,6 @@ class Admin : public Hotel
     Employee *p;
 
 public:
-    // Employee e[3];
-
     void Add_a_employee(int file_members);
     void fire_a_employee(int index);
     void promote_a_employee(int index);
@@ -496,41 +400,56 @@ public:
 };
 void Admin ::control()
 {
+    string exit;
     string choice;
-    cout << "Do you want to Add an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
+    do
     {
-        Add_a_employee(All_the_file_employees());
+        cout << "Do you want to Add an employee (yes or no) ";
+        getline(cin, choice);
+        if (choice == "yes")
+        {
+            Add_a_employee(All_the_file_employees());
+        }
+        cout << "Do you want to promote an employee (yes or no) ";
+        getline(cin, choice);
 
-        // complete_data_of_employee(index);
-    }
-    cout << "Do you want to promote an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
-    {
-        int index = 0;
-        All_employees();
-        cout << "\nEnter the index of the employee you want to promote : ";
-        cin >> index;
-        promote_a_employee(index);
-        complete_data_of_employee(index);
-    }
-    cout << "Do you want to fire an employee (yes or no) ";
-    cin >> choice;
-    if (choice == "yes")
-    {
-        int index = 0;
-        All_employees();
-        cout << "\nEnter the index of the employee you want to fire : ";
-        cin >> index;
-        fire_a_employee(index);
-        // complete_data_of_employee(index);
-    }
+        if (choice == "yes")
+        {
+            int index = 0;
+            All_employees();
+            cout << "\nEnter the index of the employee you want to promote : ";
+            cin >> index;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
+            promote_a_employee(index);
+            complete_data_of_employee(index);
+        }
+        cout << "Do you want to fire an employee (yes or no) ";
+        getline(cin, choice);
+
+        if (choice == "yes")
+        {
+            int index = 0;
+            All_employees();
+            cout << "\nEnter the index of the employee you want to fire : ";
+            cin >> index;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
+            fire_a_employee(index);
+        }
+        cout << "DO you want to check all the booked rooms : ";
+        getline(cin, choice);
+        if (choice == "yes")
+        {
+            all_rooms();
+        }
+        cout << "Do you want to exit (yes or no) : ";
+        getline(cin, exit);
+    } while (exit != "yes");
 }
 void Admin ::All_employees()
 {
-    // Employee *temp;
+
     int file_member_counter = 0;
     string line;
     ifstream file("Employee_data.txt");
@@ -660,6 +579,8 @@ void Admin ::Add_a_employee(int file_members)
 
     cout << "Enter how many employees you want to Add : ";
     cin >> add;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+
     if (add < 11)
     {
         p = new Employee[add + file_members];
@@ -667,17 +588,17 @@ void Admin ::Add_a_employee(int file_members)
         {
             cout << "Enter the data of Employee number " << i + 1 << endl;
             cout << "Enter Employee name : ";
-            cin >> p[i].name;
+            getline(cin, p[i].name);
             cout << "Enter Employee age : ";
-            cin >> p[i].age;
+            getline(cin, p[i].age);
             cout << "Enter Employee phone number : ";
-            cin >> p[i].phone_number;
+            getline(cin, p[i].phone_number);
             cout << "Enter Employee designation : ";
-            cin >> p[i].designation;
+            getline(cin, p[i].designation);
             cout << "Enter Employee payscale : ";
-            cin >> p[i].payscale;
+            getline(cin, p[i].payscale);
             cout << "Enter Employee salary : ";
-            cin >> p[i].salary;
+            getline(cin, p[i].salary);
             ofstream file("Employee_data.txt", ios ::app);
             file << p[i].name << endl
                  << p[i].age << endl
@@ -698,15 +619,15 @@ void Admin ::promote_a_employee(int index)
 {
 
     cout << p[index].designation << " was the old designation \nEnter new designation: ";
-    cin >> p[index].designation;
+    getline(cin, p[index].designation);
 
     cout << endl
          << p[index].payscale << " was the old payscale \nEnter the new payscale: ";
-    cin >> p[index].payscale;
+    getline(cin, p[index].payscale);
 
     cout << endl
          << p[index].salary << " was the old salary \nEnter new salary: ";
-    cin >> p[index].salary;
+    getline(cin, p[index].salary);
     string c_name;
     ofstream temp_file("temp.txt");
     ifstream file("Employee_data.txt");
@@ -715,7 +636,7 @@ void Admin ::promote_a_employee(int index)
     {
         if (c_name == p[index].name)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 getline(file, c_name);
             }
@@ -796,7 +717,6 @@ void Admin ::all_rooms()
     ifstream file("rooms.txt");
     while (file >> booked_rooms[i])
     {
-        // file >> booked_rooms[i];
         cout << booked_rooms[i] << " " << endl;
         i++;
     }
@@ -804,24 +724,66 @@ void Admin ::all_rooms()
 }
 int main()
 {
-    // Guest g1;
-    // string Choice;
-    // int temp = 0;
-    // cout << "Do want to sign in or sign up (enter signin or signup) ";
-    // cin >> Choice;
-    // if (Choice == "signin")
-    // {
-    //     g1.signin();
-    // }
-    // if (Choice == "signup")
-    // {
-
-    //     g1.booking();
-    // }
+    Guest g1;
+    g1.Greetings();
     Admin a;
-    a.control();
-    // a.All_the_file_employees();
+    string Choice;
+    cout << "Are you a user or admin (user or admin) : ";
+    getline(cin, Choice);
+    if (Choice == "user")
+    {
+        cout << "Do want to sign in or sign up (enter signin or signup) ";
+        getline(cin, Choice);
+        if (Choice == "signin")
+        {
+            g1.signin();
 
-    //  g1.booking();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+        }
+        else if (Choice == "signup")
+        {
+
+            g1.booking();
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+        }
+        else
+        {
+            cout << "\nError! \n\n";
+        }
+    }
+    else if (Choice == "admin")
+    {
+
+        string pass = "";
+        int tries = 3;
+        while (tries > 0)
+        {
+            cout << "Enter the password for admin : ";
+            getline(cin, pass);
+            if (pass == "majid")
+            {
+                a.control();
+                break;
+            }
+            else
+            {
+                tries--;
+                cout << "Wrong password! " << endl;
+                if (tries > 0)
+                {
+                    cout << "You have " << tries << " more tries." << endl;
+                }
+                else
+                {
+                    cout << "No more tries left." << endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        cout << "Wrong choice !!!" << endl;
+    }
     return 0;
 }
